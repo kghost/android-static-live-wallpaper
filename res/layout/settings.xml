@@ -1,0 +1,15 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/setting_root" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<ImageView android:id="@+id/setting_preview"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_above="@+id/setting_pick" />
+
+	<Button android:id="@+id/setting_pick" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_above="@+id/setting_ok"
+		android:text="Pick Picture" />
+
+	<Button android:id="@+id/setting_ok" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+		android:visibility="invisible" android:text="OK" />
+</RelativeLayout>

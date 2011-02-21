@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<string name="static_live_wallpaper">Static Live Wallpaper</string>
+	<string name="description">Simulation a static non-scrollable wallpaper</string>
+	<string name="settings">Settings</string>
+</resources>
