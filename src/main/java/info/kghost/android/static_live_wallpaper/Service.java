@@ -107,8 +107,10 @@ public class Service extends WallpaperService {
 			try {
 				c = holder.lockCanvas();
 				if (c != null) {
+					int portrait = c.getHeight() > c.getWidth() ? Settings.PORTRAIT
+							: Settings.LANDSCAPE;
 					Bitmap bm = BitmapFactory
-							.decodeStream(openFileInput(Settings.FILE_USE));
+							.decodeStream(openFileInput(Settings.FILE_USE[portrait]));
 					if (bm != null)
 						c.drawBitmap(bm, new Matrix(), null);
 				}

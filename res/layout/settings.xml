@@ -1,15 +1,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/setting_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	<ImageView android:id="@+id/setting_preview"
-		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:layout_above="@+id/setting_pick" />
 
-	<Button android:id="@+id/setting_pick" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_above="@+id/setting_ok"
-		android:text="Pick Picture" />
+	<info.kghost.android.static_live_wallpaper.LinearLayout
+		android:id="@+id/setting_preview" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_above="@+id/setting_ok"
+		android:gravity="center">
+		<ImageButton android:id="@+id/setting_portrait_preview"
+			android:layout_height="0dp" android:layout_width="0dp"
+			android:src="@drawable/ic_menu_add_picture" android:scaleType="centerInside" />
+		<ImageButton android:id="@+id/setting_landscape_preview"
+			android:layout_height="0dp" android:layout_width="0dp"
+			android:src="@drawable/ic_menu_add_picture" android:scaleType="centerInside" />
+	</info.kghost.android.static_live_wallpaper.LinearLayout>
 
 	<Button android:id="@+id/setting_ok" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_alignParentBottom="true"
-		android:visibility="invisible" android:text="OK" />
+		android:clickable="false" android:text="OK" />
 </RelativeLayout>
