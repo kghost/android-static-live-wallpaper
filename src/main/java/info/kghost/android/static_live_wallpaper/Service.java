@@ -12,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 public class Service extends WallpaperService {
@@ -35,14 +34,26 @@ public class Service extends WallpaperService {
 
 	class WallEngine extends Engine {
 		private BroadcastReceiver receiver;
+		private final SurfaceHolder.Callback callback = new SurfaceHolder.Callback() {
+			public void surfaceCreated(SurfaceHolder holder) {
+				draw();
+			}
 
-		WallEngine() {
-		}
+			public void surfaceChanged(SurfaceHolder holder, int format,
+					int width, int height) {
+				draw();
+			}
+
+			public void surfaceDestroyed(SurfaceHolder holder) {
+			}
+		};
 
 		@Override
-		public void onCreate(SurfaceHolder surfaceHolder) {
-			super.onCreate(surfaceHolder);
+		public void onCreate(SurfaceHolder holder) {
+			super.onCreate(holder);
 			// setTouchEventsEnabled(true);
+			draw();
+			holder.addCallback(callback);
 
 			IntentFilter filter = new IntentFilter(
 					"info.kghost.android.static_live_wallpaper.REFRESH");
@@ -58,6 +69,7 @@ public class Service extends WallpaperService {
 		@Override
 		public void onDestroy() {
 			unregisterReceiver(receiver);
+			this.getSurfaceHolder().removeCallback(callback);
 			super.onDestroy();
 		}
 
@@ -68,44 +80,12 @@ public class Service extends WallpaperService {
 			}
 		}
 
-		@Override
-		public void onSurfaceChanged(SurfaceHolder holder, int format,
-				int width, int height) {
-			super.onSurfaceChanged(holder, format, width, height);
-			draw();
-		}
-
-		@Override
-		public void onSurfaceCreated(SurfaceHolder holder) {
-			super.onSurfaceCreated(holder);
-		}
-
-		@Override
-		public void onSurfaceDestroyed(SurfaceHolder holder) {
-			super.onSurfaceDestroyed(holder);
-		}
-
-		@Override
-		public void onOffsetsChanged(float xOffset, float yOffset, float xStep,
-				float yStep, int xPixels, int yPixels) {
-		}
-
-		@Override
-		public void onTouchEvent(MotionEvent event) {
-			super.onTouchEvent(event);
-		}
-
-		/*
-		 * Draw one frame of the animation. This method gets called repeatedly
-		 * by posting a delayed Runnable. You can do any drawing you want in
-		 * here. This example draws a wireframe cube.
-		 */
-		void draw() {
-			final SurfaceHolder holder = getSurfaceHolder();
-
+		private void draw() {
+			if (!isVisible())
+				return;
 			Canvas c = null;
 			try {
-				c = holder.lockCanvas();
+				c = getSurfaceHolder().lockCanvas();
 				if (c != null) {
 					int portrait = c.getHeight() > c.getWidth() ? Settings.PORTRAIT
 							: Settings.LANDSCAPE;
@@ -118,7 +98,7 @@ public class Service extends WallpaperService {
 				Log.e("StaticLiveWallpaperEngine", "Error load bitmap");
 			} finally {
 				if (c != null)
-					holder.unlockCanvasAndPost(c);
+					getSurfaceHolder().unlockCanvasAndPost(c);
 			}
 		}
 	}
