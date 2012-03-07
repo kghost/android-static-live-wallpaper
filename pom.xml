@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>info.kghost.android</groupId>
 	<artifactId>static-live-wallpaper</artifactId>
-	<version>0.7.0</version>
+	<version>0.7.2</version>
 	<packaging>apk</packaging>
 	<name>static-live-wallpaper</name>
 

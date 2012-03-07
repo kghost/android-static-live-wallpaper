@@ -10,12 +10,13 @@ import java.util.Observer;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -32,7 +33,6 @@ public class Settings extends Activity {
 			"static-live-wallpaper-landscape.png" };
 	static final int[] LAYOUT_ID = { R.id.setting_portrait_preview,
 			R.id.setting_landscape_preview };
-	private DisplayMetrics metrics = new DisplayMetrics();;
 	private boolean set[] = { false, false };
 
 	private class PreviewClickListener implements OnClickListener {
@@ -62,23 +62,23 @@ public class Settings extends Activity {
 			i.putExtra("crop", "true");
 			i.putExtra("scale", true);
 			if (orientation == PORTRAIT) {
-				i.putExtra("outputX",
-						Math.min(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("outputY",
-						Math.max(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("aspectX",
-						Math.min(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("aspectY",
-						Math.max(metrics.widthPixels, metrics.heightPixels));
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				Display d = getWindowManager().getDefaultDisplay();
+				int w = d.getWidth();
+				int h = d.getHeight();
+				i.putExtra("outputX", w);
+				i.putExtra("outputY", h);
+				i.putExtra("aspectX", w);
+				i.putExtra("aspectY", h);
 			} else {
-				i.putExtra("outputX",
-						Math.max(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("outputY",
-						Math.min(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("aspectX",
-						Math.max(metrics.widthPixels, metrics.heightPixels));
-				i.putExtra("aspectY",
-						Math.min(metrics.widthPixels, metrics.heightPixels));
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+				Display d = getWindowManager().getDefaultDisplay();
+				int w = d.getWidth();
+				int h = d.getHeight();
+				i.putExtra("outputX", w);
+				i.putExtra("outputY", h);
+				i.putExtra("aspectX", w);
+				i.putExtra("aspectY", h);
 			}
 			i.putExtra("noFaceDetection", true);
 			i.putExtra("output",
@@ -91,29 +91,30 @@ public class Settings extends Activity {
 				Toast.makeText(Settings.this, "Can't not find photo picker",
 						Toast.LENGTH_LONG).show();
 			}
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
 	}
 
 	private void calculateLayout(Point point) {
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		boolean portrait = metrics.heightPixels > metrics.widthPixels;
+		Display d = getWindowManager().getDefaultDisplay();
+		int w = d.getWidth();
+		int h = d.getHeight();
+		boolean portrait = h > w;
 		LinearLayout layout = ((LinearLayout) findViewById(R.id.setting_preview));
 		layout.setOrientation(portrait ? LinearLayout.VERTICAL
 				: LinearLayout.HORIZONTAL);
 		int height, width;
 		if (portrait) {
-			height = metrics.widthPixels + metrics.heightPixels;
-			width = Math.max(metrics.widthPixels, metrics.heightPixels);
+			height = w + h;
+			width = Math.max(w, h);
 		} else {
-			width = metrics.widthPixels + metrics.heightPixels;
-			height = Math.max(metrics.widthPixels, metrics.heightPixels);
+			width = w + h;
+			height = Math.max(w, h);
 		}
 		double scale_rate = Math.min(((double) point.x) / width,
 				((double) point.y) / height);
-		height = (int) Math.floor(scale_rate
-				* Math.max(metrics.widthPixels, metrics.heightPixels));
-		width = (int) Math.floor(scale_rate
-				* Math.min(metrics.widthPixels, metrics.heightPixels));
+		height = (int) Math.floor(scale_rate * Math.max(w, h));
+		width = (int) Math.floor(scale_rate * Math.min(w, h));
 		findViewById(R.id.setting_portrait_preview).setLayoutParams(
 				new LinearLayout.LayoutParams(width, height));
 		findViewById(R.id.setting_landscape_preview).setLayoutParams(
