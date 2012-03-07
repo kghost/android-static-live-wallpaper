@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -91,8 +92,14 @@ public class Service extends WallpaperService {
 							: Settings.LANDSCAPE;
 					Bitmap bm = BitmapFactory
 							.decodeStream(openFileInput(Settings.FILE_USE[portrait]));
-					if (bm != null)
-						c.drawBitmap(bm, new Matrix(), null);
+					if (bm != null) {
+						Matrix matrix = new Matrix();
+						matrix.setRectToRect(
+								new RectF(0, 0, bm.getWidth(), bm.getHeight()),
+								new RectF(0, 0, c.getWidth(), c.getHeight()),
+								Matrix.ScaleToFit.CENTER);
+						c.drawBitmap(bm, matrix, null);
+					}
 				}
 			} catch (FileNotFoundException e) {
 				Log.e("StaticLiveWallpaperEngine", "Error load bitmap");
