@@ -36,6 +36,12 @@
 									</includes>
 									<keystore>${basedir}/signkey.keystore</keystore>
 									<alias>lyrics</alias>
+									<arguments>
+										<argument>-digestalg</argument>
+										<argument>SHA1</argument>
+										<argument>-sigalg</argument>
+										<argument>MD5withRSA</argument>
+									</arguments>
 								</configuration>
 							</execution>
 						</executions>
